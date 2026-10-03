@@ -321,38 +321,6 @@ function onPurposeChange() {
   // รายการอุปกรณ์ที่เลือกได้ต้องตรง scope ของวัตถุประสงค์ที่เลือก — เริ่มแถวใหม่ให้ตรงชุดที่เลือกได้
   document.getElementById('itemRows').querySelectorAll('.item-row:not(.head)').forEach((r) => r.remove());
   addItemRow();
-
-  // แสดงตัวเลือก "เพื่อเปลี่ยนของชำรุด" เฉพาะตอนวัตถุประสงค์ "ยืม" (ของทดแทนก็ต้องนำกลับเข้าคลังเหมือนกัน
-  // เมื่อครบสัญญา — คนละกรณีกับขายขาด/ใช้งานภายใน) — สลับ purpose แล้วถ้าซ่อนอยู่ให้ล้างค่าที่เคยติ๊กไว้ด้วย
-  const swapRow = document.getElementById('swapRow');
-  if (swapRow) {
-    if (purpose === 'ยืม') {
-      swapRow.style.display = 'block';
-    } else {
-      swapRow.style.display = 'none';
-      document.getElementById('reqIsSwap').checked = false;
-      document.getElementById('swapTagRow').style.display = 'none';
-    }
-  }
-}
-
-// เปิด/ปิดช่องเลือก Asset Tag อ้างอิงตอนติ๊ก/ยกเลิก "เพื่อเปลี่ยนของชำรุด"
-function onSwapToggle() {
-  const checked = document.getElementById('reqIsSwap').checked;
-  const row = document.getElementById('swapTagRow');
-  row.style.display = checked ? 'block' : 'none';
-  if (checked) populateSwapTagOptions();
-}
-
-// เติมตัวเลือก Asset Tag ที่เบิกอยู่ตอนนี้ (BORROWED) ให้เลือกอ้างอิง — เป็นฟิลด์อ้างอิงเพื่อ traceability
-// เท่านั้น ไม่ใช่การตัดสต๊อกจริง (ของจริงเลือก Serial Number ตอนจ่ายของที่หน้าจ่ายอุปกรณ์ 9.5 ตามปกติ)
-function populateSwapTagOptions() {
-  const sel = document.getElementById('reqSwapForTag');
-  if (!sel) return;
-  const borrowed = ASSETS.filter((a) => a.status === 'BORROWED').sort((a, b) => a.tag.localeCompare(b.tag));
-  sel.innerHTML = borrowed.length
-    ? borrowed.map((a) => `<option value="${a.tag}">${a.tag} — ${a.type} — ${a.project}</option>`).join('')
-    : '<option value="">ไม่มีอุปกรณ์ที่เบิกอยู่ในขณะนี้</option>';
 }
 
 function itemOptionsHtml(selected) {
@@ -386,8 +354,6 @@ function resetBorrowForm() {
   document.getElementById('reqNeedDate').value = '';
   document.getElementById('reqDueDate').value = '';
   document.querySelector('input[name=purpose][value="ยืม"]').checked = true;
-  document.getElementById('reqIsSwap').checked = false;
-  document.getElementById('swapTagRow').style.display = 'none';
   onPurposeChange();
 }
 
@@ -403,10 +369,6 @@ function submitBorrowRequest() {
   if (!neededDate) { toast('⚠️ กรุณาระบุวันที่ต้องการเริ่มใช้อุปกรณ์'); return; }
   if (rows.length === 0) { toast('⚠️ กรุณาเพิ่มรายการอุปกรณ์อย่างน้อย 1 รายการ'); return; }
   if (purpose === 'ยืม' && !dueDate) { toast('⚠️ กรุณาระบุวันที่คาดว่าจะคืน'); return; }
-
-  const isSwap = purpose === 'ยืม' && document.getElementById('reqIsSwap').checked;
-  const swapForTag = isSwap ? document.getElementById('reqSwapForTag').value : null;
-  if (isSwap && !swapForTag) { toast('⚠️ กรุณาเลือก Asset Tag ตัวที่ชำรุดที่จะไปเปลี่ยน'); return; }
 
   const items = rows.map((r) => ({
     itemId: r.querySelector('select').value,
@@ -426,18 +388,10 @@ function submitBorrowRequest() {
     // "วันที่ขอเบิก" ไม่ให้ผู้ใช้กรอกเอง — ระบบบันทึกอัตโนมัติจากวันเวลาที่กดส่งคำขอจริง (ตามที่ user ขอ)
     createdAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
     source: 'standalone',
-    // เพิ่ม 3 ต.ค. 2569 — กรณี "ไปเปลี่ยนของชำรุดที่หน้างาน": ผู้ขอเบิกอ้างอิง Asset Tag ตัวที่ชำรุดไว้
-    // ล่วงหน้าตั้งแต่ตอนขอเบิกของทดแทน (ก่อนของเสียจะถูกคืนเข้าคลังด้วยซ้ำ) ดูหัวข้อ swapBadge/
-    // findSwapRequestForTag/swapForTagBannerHtml ว่าใช้เชื่อมโยงกับหน้ารับคืน (9.7) อย่างไร
-    swapForTag: swapForTag || null,
   };
   borrowRequests.unshift(newReq);
 
-  toast(
-    isSwap
-      ? `ส่งคำขอเบิก ${newReq.id} เรียบร้อย — เพื่อเปลี่ยนของชำรุด ${swapForTag} (OPERATION จ่ายของทดแทนได้เลยตามปกติ ไม่ต้องรอให้ของเสียคืนเข้าคลังก่อน)`
-      : `ส่งคำขอเบิก ${newReq.id} เรียบร้อย — สถานะ "รอจ่ายของ" (OPERATION จะเป็นคนเลือก Serial Number จริงตอนจ่ายของ)`,
-  );
+  toast(`ส่งคำขอเบิก ${newReq.id} เรียบร้อย — สถานะ "รอจ่ายของ" (OPERATION จะเป็นคนเลือก Serial Number จริงตอนจ่ายของ)`);
   resetBorrowForm();
   renderPendingRequests();
   renderDashboard();
@@ -515,16 +469,6 @@ function returnCellHtml(r) {
 // จากการกรอกฟอร์มเองของผู้ใช้ ต้องตรวจสอบก่อนจ่ายของ
 // เพิ่ม 2 ต.ค. 2569 (Round 10 ข้อ 1): วันหมดอายุ + ปุ่มยกเลิกร่างได้เอง (opts.withCancelButton — ใช้เฉพาะ
 // ในตาราง "รายการคำขอที่ส่งแล้ว" 9.4 ที่เป็นมุมมองของผู้ขอเบิกเอง ไม่ใส่ในคิวจ่ายของฝั่ง OPERATION)
-// ป้ายสำหรับคำขอที่ผู้ขอเบิกเองระบุไว้ตั้งแต่ตอนสร้างคำขอว่า "เพื่อนำไปเปลี่ยนของชำรุดที่หน้างาน"
-// (ตรงข้ามกับ autoReplacementBadge ด้านบนที่ระบบสร้างให้อัตโนมัติหลังยืนยันรับคืน — อันนี้ผู้ใช้สร้างเอง
-// ไว้ล่วงหน้า "ก่อน" จะไปรับของเสียกลับมาคืนด้วยซ้ำ) เพิ่ม 3 ต.ค. 2569 — แก้ปัญหา user งงเรื่องลำดับเวลา
-// ของกรณี "ไปรับของเสียคืนจากลูกค้า พร้อมเอาของทดแทนไปให้เลยในเที่ยวเดียว" (ของทดแทนต้องออกจากคลังไป
-// ก่อนของเสียจะถูกคืน — คนละลำดับกับ autoReplacementBadge ที่คืนก่อนถึงจะมีทดแทน)
-function swapBadge(r) {
-  if (!r.swapForTag) return '';
-  return `<br/><span class="tag tag-blue" title="คำขอนี้สร้างไว้ล่วงหน้าเพื่อนำไปเปลี่ยนอุปกรณ์ชำรุด Asset Tag ${r.swapForTag} ที่หน้างาน">🔁 เพื่อเปลี่ยนของชำรุด ${r.swapForTag}</span>`;
-}
-
 function autoReplacementBadge(r, opts) {
   if (!r.autoReplacementNote) return '';
   opts = opts || {};
@@ -622,7 +566,7 @@ function renderPendingRequests() {
   document.getElementById('pendingBody').innerHTML = pending
     .map(
       (r) => `<tr>
-        <td><b>${r.id}</b>${autoReplacementBadge(r, { withCancelButton: true })}${swapBadge(r)}</td>
+        <td><b>${r.id}</b>${autoReplacementBadge(r, { withCancelButton: true })}</td>
         <td><span class="tag ${PURPOSE_TAG_CLASS[r.purpose] || 'tag-gray'}">${r.purpose}</span></td>
         <td>${r.requester}<br/><span style="color:#94a3b8;font-size:11.5px;">${r.team}</span></td>
         <td>${r.project}</td>
@@ -811,7 +755,7 @@ function renderDispatchQueue() {
   const queue = borrowRequests.filter((r) => r.status === 'รอจ่ายของ');
   document.getElementById('dispatchQueueBody').innerHTML = queue
     .map((r) => `<tr>
-      <td><b>${r.id}</b>${autoReplacementBadge(r)}${swapBadge(r)}</td>
+      <td><b>${r.id}</b>${autoReplacementBadge(r)}</td>
       <td><span class="tag ${PURPOSE_TAG_CLASS[r.purpose] || 'tag-gray'}">${r.purpose}</span></td>
       <td>${r.requester}</td><td>${r.project}</td>
       <td>${r.items.map((it) => `${itemNameById(it.itemId)} ×${it.qty}`).join(', ')}</td>
@@ -969,7 +913,6 @@ function openDispatchDrawer(reqId) {
     <div class="kv"><div class="k">ผู้ขอ</div><div class="v">${r.requester} (${r.team})</div></div>
     <div class="kv"><div class="k">โครงการ/แผนก</div><div class="v">${r.project}</div></div>
     <div class="kv"><div class="k">กำหนดคืน</div><div class="v">${r.dueDate || '-'}</div></div>
-    ${r.swapForTag ? `<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1e40af;margin-top:10px;">🔁 คำขอนี้เพื่อนำไปเปลี่ยนอุปกรณ์ชำรุด <b>${r.swapForTag}</b> ที่หน้างาน — ผู้ขอจะเอาเครื่องนี้ไปแลกกับของเสียแล้วนำของเสียกลับมาคืนทีหลัง (ไปขั้นตอน "รับคืนอุปกรณ์" ตามปกติเมื่อได้ของเสียกลับมา ไม่ต้องรอตอนนี้)</div>` : ''}
     <hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0;" />
     <h3 style="font-size:14px;margin:0 0 8px;">เลือก Serial Number ที่จะจ่าย</h3>
     ${rowsHtml}
@@ -1260,74 +1203,6 @@ function returnableRowsForRequest(r) {
   });
 }
 
-// ================================================================
-// RETURN-KIND widget — เลือก "คืนปกติ" vs "ของเสีย/ชำรุด" แบบ 2 ทางเลือกใหญ่ชัดเจน
-// (เพิ่ม 3 ต.ค. 2569 — ก่อนหน้านี้ทั้ง 4 ตัวเลือก "คืนปกติ/หมดสัญญาโครงการ/อุปกรณ์เสีย/อื่นๆ" อยู่ใน
-// dropdown เดียวกัน ทำให้ user ไม่รู้ตัวว่ากำลังตัดสินใจเรื่องใหญ่ที่ผลลัพธ์ต่างกันคนละเรื่อง — เลือก
-// "อุปกรณ์เสีย" จะเปลี่ยนสถานะทรัพย์สินเป็นรอซ่อมและส่งเข้าคิว IT Support ส่วนอีก 3 ตัวเลือกกลับเข้า
-// สต๊อกพร้อมใช้ทันทีเหมือนกันหมด — จึงแยกเป็น 2 การ์ดใหญ่ก่อน แล้วค่อยมีตัวเลือกย่อยเฉพาะฝั่ง "คืนปกติ"
-// ใช้ร่วมกันทั้ง 3 จุดที่มีการเลือกเหตุผลรับคืน: เช็กลิสต์แจ้งคืนเอง (self-service), หน้าดำเนินการรับคืน
-// ของ OPERATION (ทั้งคิวแจ้งคืนและคืนของเอง/walk-in) — ใช้แนวทางเดียวกันทุกจุดตามที่ user เคยขอไว้
-// ===================================================================================================
-const RETURN_KIND_NORMAL_REASONS = ['คืนปกติ', 'หมดสัญญาโครงการ', 'อื่นๆ'];
-
-function returnKindWidgetHtml(rowId, initialReason) {
-  const isBroken = initialReason === 'อุปกรณ์เสีย';
-  const sub = isBroken ? 'คืนปกติ' : initialReason;
-  return `
-    <div class="radio-group return-kind-group">
-      <label class="radio-card radio-card-compact ${!isBroken ? 'sel' : ''}" id="rk_${rowId}_normal_card" onclick="setReturnKind('${rowId}', false)">
-        <input type="radio" id="rk_${rowId}_normal" name="rk_${rowId}" ${!isBroken ? 'checked' : ''} onclick="event.stopPropagation();" />
-        <div><div class="t">✅ คืนปกติ</div><div class="d">สภาพดี กลับเข้าสต๊อกพร้อมใช้ทันที</div></div>
-      </label>
-      <label class="radio-card radio-card-compact radio-card-danger ${isBroken ? 'sel' : ''}" id="rk_${rowId}_broken_card" onclick="setReturnKind('${rowId}', true)">
-        <input type="radio" id="rk_${rowId}_broken" name="rk_${rowId}" ${isBroken ? 'checked' : ''} onclick="event.stopPropagation();" />
-        <div><div class="t">⚠️ ของเสีย/ชำรุด</div><div class="d">ส่งเข้าคิวพิจารณาซ่อมของ IT Support ไม่กลับเข้าสต๊อกทันที</div></div>
-      </label>
-    </div>
-    <div id="rk_${rowId}_sub" style="margin-top:8px;${isBroken ? 'display:none;' : ''}">
-      <select id="rk_${rowId}_subreason" onchange="syncReturnKindFinal('${rowId}')">
-        ${RETURN_KIND_NORMAL_REASONS.map((r) => `<option value="${r}" ${r === sub ? 'selected' : ''}>เหตุผล: ${r}</option>`).join('')}
-      </select>
-    </div>
-    <input type="hidden" id="rk_${rowId}_final" value="${initialReason}" />
-  `;
-}
-
-function setReturnKind(rowId, broken) {
-  document.getElementById(`rk_${rowId}_normal`).checked = !broken;
-  document.getElementById(`rk_${rowId}_broken`).checked = broken;
-  document.getElementById(`rk_${rowId}_normal_card`).classList.toggle('sel', !broken);
-  document.getElementById(`rk_${rowId}_broken_card`).classList.toggle('sel', broken);
-  document.getElementById(`rk_${rowId}_sub`).style.display = broken ? 'none' : '';
-  syncReturnKindFinal(rowId);
-}
-
-function syncReturnKindFinal(rowId) {
-  const broken = document.getElementById(`rk_${rowId}_broken`).checked;
-  const final = document.getElementById(`rk_${rowId}_final`);
-  final.value = broken ? 'อุปกรณ์เสีย' : document.getElementById(`rk_${rowId}_subreason`).value;
-}
-
-function getReturnKindValue(rowId) {
-  const el = document.getElementById(`rk_${rowId}_final`);
-  return el ? el.value : 'คืนปกติ';
-}
-
-// หาคำขอเบิก "เพื่อเปลี่ยนของชำรุด" (swapForTag) ที่ยังค้างอยู่ (รอจ่ายของ/เบิกแล้ว) ซึ่งอ้างอิงถึง
-// Asset Tag นี้ — ใช้เตือน OPERATION ตอนกำลังจะรับคืนของชำรุดตัวนี้ ว่ามีคำขอทดแทนสร้างไว้ล่วงหน้าแล้ว
-// ไม่ต้องสร้างซ้ำ/ไม่ต้องติ๊กขอทดแทนอีกรอบ (ดูหัวข้อ "ไปเปลี่ยนของชำรุดที่หน้างาน" ในขอเบิก 9.4)
-function findSwapRequestForTag(tag) {
-  return borrowRequests.find((r) => r.swapForTag === tag && (r.status === 'รอจ่ายของ' || r.status === 'เบิกแล้ว'));
-}
-
-function swapForTagBannerHtml(tag) {
-  const req = findSwapRequestForTag(tag);
-  if (!req) return '';
-  const statusText = req.status === 'เบิกแล้ว' ? 'จ่ายของทดแทนไปแล้ว' : 'รอจ่ายของทดแทน';
-  return `<div style="background:#f0fdfa;border:1px solid #99f6e4;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#0f766e;margin-bottom:12px;">✅ มีคำขอเบิกทดแทนสำหรับเครื่องนี้สร้างไว้ล่วงหน้าแล้ว — <b>${req.id}</b> (${statusText}) จากตอนไปเปลี่ยนของชำรุดที่หน้างาน — ไม่ต้องสร้างคำขอทดแทนซ้ำอีก</div>`;
-}
-
 function buildSelfReturnChecklistHtml(rows) {
   if (!rows.length) return '<div class="empty-hint">ไม่มีรายการที่สามารถแจ้งคืนได้ในขณะนี้</div>';
   return rows
@@ -1336,7 +1211,7 @@ function buildSelfReturnChecklistHtml(rows) {
     <div class="kv" style="align-items:flex-start;">
       <div class="k">${row.label}</div>
       <div class="v">
-        ${returnKindWidgetHtml('self_' + row.rowId, 'คืนปกติ')}
+        <select id="ret_${row.rowId}">${RETURN_REASONS.map((rr) => `<option value="${rr}">${rr}</option>`).join('')}</select>
       </div>
     </div>`,
     )
@@ -1381,8 +1256,9 @@ function submitSelfReturn(reqId) {
   const note = document.getElementById('selfReturnNote').value.trim();
   const wantsReplacement = document.getElementById('selfReturnWantsReplacement').checked;
   const items = rows.map((row) => {
+    const sel = document.getElementById(`ret_${row.rowId}`);
     const asset = ASSETS.find((a) => a.tag === row.tag);
-    return { tag: row.tag, itemName: asset ? asset.type : '-', reason: getReturnKindValue('self_' + row.rowId) };
+    return { tag: row.tag, itemName: asset ? asset.type : '-', reason: sel ? sel.value : 'คืนปกติ' };
   });
 
   RETURN_REQUESTS.unshift({
@@ -1438,8 +1314,7 @@ function openFulfillReturnDrawer(retId) {
     <div class="kv" style="align-items:flex-start;">
       <div class="k">${it.itemName} — <b>${it.tag}</b></div>
       <div class="v">
-        ${swapForTagBannerHtml(it.tag)}
-        ${returnKindWidgetHtml('fret_' + idx, it.reason)}
+        <select id="fret_${idx}">${RETURN_REASONS.map((r) => `<option value="${r}" ${r === it.reason ? 'selected' : ''}>${r}</option>`).join('')}</select>
       </div>
     </div>`,
     )
@@ -1451,11 +1326,11 @@ function openFulfillReturnDrawer(retId) {
     ${rr.note ? `<div class="kv"><div class="k">หมายเหตุจากผู้แจ้งคืน</div><div class="v">${rr.note}</div></div>` : ''}
     ${
       rr.wantsReplacement
-        ? '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1e40af;margin-top:10px;">ผู้แจ้งคืนระบุว่ายังต้องใช้งานต่อเนื่อง — ถ้ายืนยันว่า "⚠️ ของเสีย/ชำรุด" ระบบจะสร้างคำขอเบิกใหม่ (ทดแทน) ให้อัตโนมัติ รอ OPERATION ตรวจสอบและจ่ายของตามปกติ (ข้ามได้ถ้ามีคำขอทดแทนสร้างไว้ล่วงหน้าแล้ว — ดูป้ายสีเขียวด้านล่างต่อรายการ)</div>'
+        ? '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1e40af;margin-top:10px;">ผู้แจ้งคืนระบุว่ายังต้องใช้งานต่อเนื่อง — ถ้ายืนยันว่า "อุปกรณ์เสีย" ระบบจะสร้างคำขอเบิกใหม่ (ทดแทน) ให้อัตโนมัติ รอ OPERATION ตรวจสอบและจ่ายของตามปกติ</div>'
         : ''
     }
     <hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0;" />
-    <h3 style="font-size:14px;margin:0 0 10px;">ยืนยัน/ปรับการตัดสินใจรับคืนจริงต่อรายการ</h3>
+    <h3 style="font-size:14px;margin:0 0 10px;">ยืนยัน/ปรับเหตุผลรับคืนจริงต่อรายการ</h3>
     ${rowsHtml}
     <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
       <button class="btn" onclick="closeActionDrawer()">ยกเลิก</button>
@@ -1473,7 +1348,8 @@ function confirmFulfillReturn(retId) {
   let anyBroken = false;
 
   rr.items.forEach((it, idx) => {
-    const reason = getReturnKindValue('fret_' + idx);
+    const sel = document.getElementById(`fret_${idx}`);
+    const reason = sel ? sel.value : it.reason;
     it.reason = reason; // บันทึกเหตุผลที่ OPERATION ยืนยันจริง (อาจต่างจากที่ผู้แจ้งคืนระบุไว้ตอนแรก)
     const a = ASSETS.find((x) => x.tag === it.tag);
     if (!a) return;
@@ -1500,12 +1376,10 @@ function confirmFulfillReturn(retId) {
   // Gap B: ถ้าผู้แจ้งคืนบอกว่ายังต้องใช้ต่อ และมีรายการเสียจริง สร้างคำขอเบิกทดแทนแบบร่างให้อัตโนมัติ
   // (ไม่ auto จ่ายของทันที — ยังต้องผ่าน OPERATION ตรวจสอบ+จ่ายของตามขั้นตอนปกติเหมือนคำขออื่น ๆ)
   let replacementMsg = '';
-  // ข้ามการสร้างร่างทดแทนอัตโนมัติถ้ารายการที่เสียมีคำขอ "เปลี่ยนของชำรุด" (swapForTag) สร้างไว้
-  // ล่วงหน้าแล้วอยู่แล้ว (ดูปุ่ม swapForTagBannerHtml ด้านบน) — ป้องกันสร้างคำขอทดแทนซ้ำซ้อน 2 ใบ
-  const brokenTagsWithoutSwap = rr.items.filter((it) => it.reason === 'อุปกรณ์เสีย' && !findSwapRequestForTag(it.tag));
-  if (rr.wantsReplacement && anyBroken && brokenTagsWithoutSwap.length) {
+  if (rr.wantsReplacement && anyBroken) {
     const originalReq = borrowRequests.find((x) => x.id === rr.reqId);
-    const replacementItems = brokenTagsWithoutSwap
+    const replacementItems = rr.items
+      .filter((it) => it.reason === 'อุปกรณ์เสีย')
       .map((it) => {
         const master = itemMasterByName(it.itemName);
         return master ? { itemId: master.id, qty: 1 } : null;
@@ -1580,10 +1454,9 @@ function openReturnDrawer(tag) {
     <div class="kv"><div class="k">Asset Tag</div><div class="v"><b>${a.tag}</b></div></div>
     <div class="kv"><div class="k">ประเภท</div><div class="v">${a.type}</div></div>
     <div class="kv"><div class="k">โครงการ/ลูกค้า</div><div class="v">${a.project}</div></div>
-    ${swapForTagBannerHtml(a.tag)}
     <div class="form-row" style="margin-top:14px;">
-      <label>ผลการตรวจสภาพ <span class="req">*</span></label>
-      ${returnKindWidgetHtml('walkin', 'คืนปกติ')}
+      <label>เหตุผลรับคืน <span class="req">*</span></label>
+      <select id="returnReason">${RETURN_REASONS.map((r) => `<option value="${r}">${r}</option>`).join('')}</select>
     </div>
     <div class="form-row">
       <label>หมายเหตุ</label>
@@ -1600,7 +1473,7 @@ function openReturnDrawer(tag) {
 function confirmReturn(tag) {
   const a = ASSETS.find((x) => x.tag === tag);
   if (!a) return;
-  const reason = getReturnKindValue('walkin');
+  const reason = document.getElementById('returnReason').value;
   const note = document.getElementById('returnNote').value.trim();
   const broken = reason === 'อุปกรณ์เสีย';
   const fromProject = a.project;

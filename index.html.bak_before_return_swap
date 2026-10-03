@@ -207,20 +207,6 @@
               <div class="add-row-btn" onclick="addItemRow()">+ เพิ่มรายการอุปกรณ์</div>
             </div>
 
-            <!-- เพิ่ม 3 ต.ค. 2569: กรณี "ไปเปลี่ยนของชำรุดที่หน้างาน" — ของทดแทนต้องออกจากคลังไปก่อน
-                 ของเสียจะถูกคืน (คนละลำดับเวลากับ auto-replacement ตอนแจ้งคืน 9.7) ดูเฉพาะตอน "ยืม" -->
-            <div class="form-row" id="swapRow" style="display:none;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 12px;">
-              <label style="display:flex;align-items:center;gap:6px;font-weight:400;">
-                <input type="checkbox" id="reqIsSwap" style="width:auto;" onclick="onSwapToggle()" />
-                คำขอนี้เพื่อนำไปเปลี่ยนอุปกรณ์ชำรุดที่หน้างาน (จะไปรับของเสียตัวเดิมกลับมาคืนทีหลัง — ไปเที่ยวเดียว ประหยัดค่าเดินทาง)
-              </label>
-              <div id="swapTagRow" style="display:none;margin-top:8px;">
-                <label>อ้างอิง Asset Tag ตัวที่ชำรุด (ที่จะไปเก็บกลับมา) <span class="req">*</span></label>
-                <select id="reqSwapForTag"></select>
-                <span class="hint">ใช้เชื่อมโยงให้เห็นว่าคำขอนี้มาแทนเครื่องไหน — ตอนไปเก็บของเสียตัวนี้กลับมาจริง ให้ OPERATION ทำรายการ "รับคืนอุปกรณ์" ของตัวนี้ตามปกติ (เลือก "⚠️ ของเสีย/ชำรุด") ระบบจะโยงให้เห็นว่ามีของทดแทนจ่ายไปแล้ว ไม่ต้องสร้างคำขอทดแทนซ้ำ</span>
-              </div>
-            </div>
-
             <div class="form-row">
               <label>หมายเหตุ</label>
               <textarea id="reqNote" placeholder="ระบุรายละเอียดเพิ่มเติม (ถ้ามี)"></textarea>

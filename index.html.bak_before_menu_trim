@@ -9,7 +9,7 @@
 <body>
 
 <div class="mockup-banner">
-  🧪 <b>MOCKUP รอบที่ 2</b> — คลิกได้จริงเพื่อดู flow/field เท่านั้น ไม่เชื่อมฐานข้อมูล ข้อมูลทั้งหมดเป็นตัวอย่างสมมติ รีเฟรชหน้าแล้วรีเซ็ต · แสดงเฉพาะเมนู <b>ระบบจัดการคลังทรัพย์สิน (Stock)</b> ครบทั้ง 11 เมนู (เมนูอื่นของ PMeX ซ่อนไว้ชั่วคราวเพื่อไม่ให้สับสน)
+  🧪 <b>MOCKUP รอบที่ 2</b> — คลิกได้จริงเพื่อดู flow/field เท่านั้น ไม่เชื่อมฐานข้อมูล ข้อมูลทั้งหมดเป็นตัวอย่างสมมติ รีเฟรชหน้าแล้วรีเซ็ต · เมนูกลุ่ม 1.0–8.0 เป็นของเดิมใน PMeX (ย่อไว้ให้เห็นบริบท) · กลุ่ม <b>9.0 ระบบจัดการคลังทรัพย์สิน</b> ตอนนี้ครบทั้ง 11 เมนูแล้ว
 </div>
 
 <div class="shell">
@@ -22,7 +22,65 @@
     </div>
     <nav class="nav" id="nav">
 
-<!-- ============ กลุ่มใหม่: STOCK MODULE ============ -->
+      <div class="ngrp team-SYSTEM closed" data-grp="1">
+        <div class="nhd" onclick="toggleGroup(this)"><span>แดชบอร์ดและแจ้งเตือน</span><span class="car">▾</span></div>
+        <div class="nbd">
+          <a href="#">▤ ภาพรวมบริหารโครงการ &amp; KPI</a>
+          <a href="#">▦ แดชบอร์ดการเงินโครงการ</a>
+          <a href="#">◔ ศูนย์แจ้งเตือนของฉัน</a>
+        </div>
+      </div>
+
+      <div class="ngrp team-BC closed" data-grp="2">
+        <div class="nhd" onclick="toggleGroup(this)"><span>งานขายและแบบฟอร์มความต้องการ<i class="nteam nteam-BC">ฝั่งขาย (BC)</i></span><span class="car">▾</span></div>
+        <div class="nbd">
+          <a href="#">◰ ระบบจัดการโอกาสขายและเตรียมส่งมอบงาน</a>
+          <a href="#">▧ แบบฟอร์มบันทึกและส่งมอบโครงการ</a>
+          <a href="#">▦ ระบบติดตามงานส่งมอบและเอกสารสัญญา</a>
+        </div>
+      </div>
+
+      <div class="ngrp team-SYSTEM closed" data-grp="3">
+        <div class="nhd" onclick="toggleGroup(this)"><span>งานบริหารโครงการ (PMO)</span><span class="car">▾</span></div>
+        <div class="nbd">
+          <a href="#">▧ กล่องรับงานปฏิบัติการ</a>
+          <a href="#">▦ ทะเบียนโครงการทั้งหมด</a>
+        </div>
+      </div>
+
+      <div class="ngrp team-PMEX closed" data-grp="4">
+        <div class="nhd" onclick="toggleGroup(this)"><span>การดำเนินงานหน้างาน (PMeX)<i class="nteam nteam-PMEX">ฝั่ง PMeX</i></span><span class="car">▾</span></div>
+        <div class="nbd">
+          <a href="#">▤ บอร์ด Kanban ปฏิบัติการ</a>
+          <a href="#">▧ แบบประเมินสภาพระบบเดิม (As-Is)</a>
+          <a href="#">▦ รายละเอียด/ควบคุมโครงการ</a>
+        </div>
+      </div>
+
+      <div class="ngrp team-SYSTEM closed" data-grp="5">
+        <div class="nhd" onclick="toggleGroup(this)"><span>ทีม Products</span><span class="car">▾</span></div>
+        <div class="nbd"><a href="#">▦ กล่องงาน Products</a></div>
+      </div>
+
+      <div class="ngrp team-BS closed" data-grp="6">
+        <div class="nhd" onclick="toggleGroup(this)"><span>คลัง/อุปกรณ์ (เดิม)<i class="nteam nteam-BS">จัดซื้อ</i></span><span class="car">▾</span></div>
+        <div class="nbd">
+          <a href="#">▦ คลังอุปกรณ์ (Batch 1 เดิม)</a>
+          <a href="#">◔ ประวัติแจ้งซ่อมอุปกรณ์</a>
+        </div>
+      </div>
+
+      <div class="ngrp team-SYSTEM closed" data-grp="7">
+        <div class="nhd" onclick="toggleGroup(this)"><span>ข้อมูลหลักระบบ</span><span class="car">▾</span></div>
+        <div class="nbd"><a href="#">▧ ทะเบียน อปท./ลูกค้า</a><a href="#">▦ แค็ตตาล็อกผลิตภัณฑ์</a></div>
+      </div>
+
+      <div class="ngrp team-SYSTEM closed" data-grp="8">
+        <div class="nhd" onclick="toggleGroup(this)"><span>ผู้ดูแลระบบ</span><span class="car">▾</span></div>
+        <div class="nbd"><a href="#">▦ จัดการผู้ใช้และสิทธิ์</a></div>
+      </div>
+
+      <!-- ============ กลุ่มใหม่: STOCK MODULE ============ -->
       <div class="ngrp team-STOCK" data-grp="9">
         <div class="nhd" onclick="toggleGroup(this)">
           <span>ระบบจัดการคลังทรัพย์สิน<i class="nteam nteam-STOCK">Stock — ใหม่</i></span>
@@ -205,20 +263,6 @@
                 <div class="item-row head"><div>ประเภทอุปกรณ์</div><div>จำนวน</div><div>หน่วย</div><div></div></div>
               </div>
               <div class="add-row-btn" onclick="addItemRow()">+ เพิ่มรายการอุปกรณ์</div>
-            </div>
-
-            <!-- เพิ่ม 3 ต.ค. 2569: กรณี "ไปเปลี่ยนของชำรุดที่หน้างาน" — ของทดแทนต้องออกจากคลังไปก่อน
-                 ของเสียจะถูกคืน (คนละลำดับเวลากับ auto-replacement ตอนแจ้งคืน 9.7) ดูเฉพาะตอน "ยืม" -->
-            <div class="form-row" id="swapRow" style="display:none;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 12px;">
-              <label style="display:flex;align-items:center;gap:6px;font-weight:400;">
-                <input type="checkbox" id="reqIsSwap" style="width:auto;" onclick="onSwapToggle()" />
-                คำขอนี้เพื่อนำไปเปลี่ยนอุปกรณ์ชำรุดที่หน้างาน (จะไปรับของเสียตัวเดิมกลับมาคืนทีหลัง — ไปเที่ยวเดียว ประหยัดค่าเดินทาง)
-              </label>
-              <div id="swapTagRow" style="display:none;margin-top:8px;">
-                <label>อ้างอิง Asset Tag ตัวที่ชำรุด (ที่จะไปเก็บกลับมา) <span class="req">*</span></label>
-                <select id="reqSwapForTag"></select>
-                <span class="hint">ใช้เชื่อมโยงให้เห็นว่าคำขอนี้มาแทนเครื่องไหน — ตอนไปเก็บของเสียตัวนี้กลับมาจริง ให้ OPERATION ทำรายการ "รับคืนอุปกรณ์" ของตัวนี้ตามปกติ (เลือก "⚠️ ของเสีย/ชำรุด") ระบบจะโยงให้เห็นว่ามีของทดแทนจ่ายไปแล้ว ไม่ต้องสร้างคำขอทดแทนซ้ำ</span>
-              </div>
             </div>
 
             <div class="form-row">
