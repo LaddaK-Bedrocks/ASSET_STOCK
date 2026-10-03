@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ระบบจัดการคลังทรัพย์สิน (Stock) — Mockup | PMeX</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="mockup-banner">
+  🧪 <b>MOCKUP รอบที่ 2</b> — คลิกได้จริงเพื่อดู flow/field เท่านั้น ไม่เชื่อมฐานข้อมูล ข้อมูลทั้งหมดเป็นตัวอย่างสมมติ รีเฟรชหน้าแล้วรีเซ็ต · เมนูกลุ่ม 1.0–8.0 เป็นของเดิมใน PMeX (ย่อไว้ให้เห็นบริบท) · กลุ่ม <b>9.0 ระบบจัดการคลังทรัพย์สิน</b> ตอนนี้ครบทั้ง 11 เมนูแล้ว
+</div>
+
+<div class="shell">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side">
+    <div class="brand">
+      <img src="logo.png" alt="bedrock" />
+      <div class="pmx">PM<span>eX</span></div>
+    </div>
+    <nav class="nav" id="nav">
+
+      <div class="ngrp team-SYSTEM closed" data-grp="1">
+        <div class="nhd" onclick="toggleGroup(this)"><span>แดชบอร์ดและแจ้งเตือน</span><span class="car">▾</span></div>
+        <div class="nbd">
+          <a href="#">▤ ภาพรวมบริหารโครงการ &amp; KPI</a>
+          <a href="#">▦ แดชบอร์ดการเงินโครงการ</a>
+          <a href="#">◔ ศูนย์แจ้งเตือนของฉัน</a>
+        </div>
+      </div>
+
+      <div class="ngrp team-BC closed" data-grp="2">
+        <div class="nhd" onclick="toggleGroup(this)"><span>งานขายและแบบฟอร์มความต้องการ<i class="nteam nteam-BC">ฝั่งขาย (BC)</i></span><span class="car">▾</span></div>
+        <div class="nbd">
+          <a href="#">◰ ระบบจัดการโอกาสขายและเตรียมส่งมอบงาน</a>
+          <a href="#">▧ แบบฟอร์มบันทึกและส่งมอบโครงการ</a>
+          <a href="#">▦ ระบบติดตามงานส่งมอบและเอกสารสัญญา</a>
+        </div>
+      </div>
+
+      <div class="ngrp team-SYSTEM closed" data-grp="3">
+        <div class="nhd" onclick="toggleGroup(this)"><span>งานบริหารโครงการ (PMO)</span><span class="car">▾</span></div>
+        <div class="nbd">
+          <a href="#">▧ กล่องรับงานปฏิบัติการ</a>
+          <a href="#">▦ ทะเบียนโครงการทั้งหมด</a>
+        </div>
+      </div>
+
+      <div class="ngrp team-PMEX closed" data-grp="4">
+        <div class="nhd" onclick="toggleGroup(this)"><span>การดำเนินงานหน้างาน (PMeX)<i class="nteam nteam-PMEX">ฝั่ง PMeX</i></span><span class="car">▾</span></div>
+        <div class="nbd">
+          <a href="#">▤ บอร์ด Kanban ปฏิบัติการ</a>
+          <a href="#">▧ แบบประเมินสภาพระบบเดิม (As-Is)</a>
+          <a href="#">▦ รายละเอียด/ควบคุมโครงการ</a>
+        </div>
+      </div>
+
+      <div class="ngrp team-SYSTEM closed" data-grp="5">
+        <div class="nhd" onclick="toggleGroup(this)"><span>ทีม Products</span><span class="car">▾</span></div>
+        <div class="nbd"><a href="#">▦ กล่องงาน Products</a></div>
+      </div>
+
+      <div class="ngrp team-BS closed" data-grp="6">
+        <div class="nhd" onclick="toggleGroup(this)"><span>คลัง/อุปกรณ์ (เดิม)<i class="nteam nteam-BS">จัดซื้อ</i></span><span class="car">▾</span></div>
+        <div class="nbd">
+          <a href="#">▦ คลังอุปกรณ์ (Batch 1 เดิม)</a>
+          <a href="#">◔ ประวัติแจ้งซ่อมอุปกรณ์</a>
+        </div>
+      </div>
+
+      <div class="ngrp team-SYSTEM closed" data-grp="7">
+        <div class="nhd" onclick="toggleGroup(this)"><span>ข้อมูลหลักระบบ</span><span class="car">▾</span></div>
+        <div class="nbd"><a href="#">▧ ทะเบียน อปท./ลูกค้า</a><a href="#">▦ แค็ตตาล็อกผลิตภัณฑ์</a></div>
+      </div>
+
+      <div class="ngrp team-SYSTEM closed" data-grp="8">
+        <div class="nhd" onclick="toggleGroup(this)"><span>ผู้ดูแลระบบ</span><span class="car">▾</span></div>
+        <div class="nbd"><a href="#">▦ จัดการผู้ใช้และสิทธิ์</a></div>
+      </div>
+
+      <!-- ============ กลุ่มใหม่: STOCK MODULE ============ -->
+      <div class="ngrp team-STOCK" data-grp="9">
+        <div class="nhd" onclick="toggleGroup(this)">
+          <span>ระบบจัดการคลังทรัพย์สิน<i class="nteam nteam-STOCK">Stock — ใหม่</i></span>
+          <span class="car">▾</span>
+        </div>
+        <div class="nbd">
+          <a href="#" data-screen="dashboard" class="active">▤ ภาพรวม (Dashboard)</a>
+          <a href="#" data-screen="asset-register">▦ ทะเบียนทรัพย์สิน</a>
+          <a href="#" data-screen="receive">▧ รับของเข้าคลัง<i class="nnew">ใหม่</i></a>
+          <a href="#" data-screen="borrow-request">◱ ขอเบิก</a>
+          <a href="#" data-screen="dispatch">▶ จ่ายอุปกรณ์<i class="nnew">ใหม่</i></a>
+          <a href="#" data-screen="renewal">↻ ต่ออายุการยืม<i class="nnew">ใหม่</i></a>
+          <a href="#" data-screen="return">◨ รับคืนอุปกรณ์<i class="nnew">ใหม่</i></a>
+          <a href="#" data-screen="repair">⚙ คิวพิจารณาซ่อม<i class="nnew">ใหม่</i></a>
+          <a href="#" data-screen="writeoff">⛔ คำขอ/อนุมัติ Write-off<i class="nnew">ใหม่</i></a>
+          <a href="#" data-screen="annual-check">☑ ตรวจนับประจำปี<i class="nnew">ใหม่</i></a>
+          <a href="#" data-screen="item-master">☰ ตั้งค่า Item Master<i class="nnew">ใหม่</i></a>
+        </div>
+      </div>
+
+    </nav>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <div class="main">
+    <header class="top">
+      <h1 id="pageTitle">ภาพรวม (Dashboard)</h1>
+      <div class="r">
+        <div class="role-switch">
+          👤 สวมบทบาท (mockup เท่านั้น):
+          <select id="roleSwitch" onchange="onRoleChange()">
+            <option value="ASSET_HOLDER">Asset Holder (พนักงานทั่วไป)</option>
+            <option value="OPERATION">OPERATION (เจ้าหน้าที่ stock)</option>
+            <option value="IT_SUPPORT">IT Support</option>
+            <option value="APPROVER">ผู้อนุมัติ (Write-off)</option>
+          </select>
+        </div>
+        <button class="bell" title="ศูนย์แจ้งเตือนของฉัน">🔔</button>
+        <div class="user">
+          <div class="avatar" id="avatarInit">LK</div>
+          <span id="userLabel">ลัดดา คำมูล · Asset Holder</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- ============ SCREEN: DASHBOARD ============ -->
+      <section class="screen active" id="screen-dashboard">
+        <div class="page-head">
+          <div>
+            <h2>ภาพรวมคลังทรัพย์สิน</h2>
+            <p>สรุปสถานะทรัพย์สินทั้งหมด — มุมมองจะปรับตามบทบาทที่เลือกด้านบน</p>
+          </div>
+        </div>
+
+        <div class="stat-grid" id="statGrid"></div>
+
+        <div class="card">
+          <h3 style="margin-top:0;font-size:14.5px;">⏰ รายการใกล้ครบกำหนดคืน (ภายใน 30 วัน)</h3>
+          <table class="dt" id="dueSoonTable">
+            <thead><tr><th>Asset Tag</th><th>ประเภท</th><th>โครงการ/ลูกค้า</th><th>กำหนดคืน</th><th>สถานะ</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN: ASSET REGISTER ============ -->
+      <section class="screen" id="screen-asset-register">
+        <div class="page-head">
+          <div>
+            <h2>ทะเบียนทรัพย์สิน (Asset Register)</h2>
+            <p>Master ทรัพย์สินเดียวทั้งบริษัท — กำกับด้วย flag ภายใน / ให้ยืมได้ / ให้ขายได้ · คลิกแถวเพื่อดูรายละเอียด+ประวัติ</p>
+          </div>
+          <button class="btn btn-primary" onclick="document.querySelector('#nav a[data-screen=receive]').click()">+ รับของเข้าคลัง</button>
+        </div>
+
+        <div class="filters">
+          <input type="text" id="arSearch" placeholder="ค้นหา Asset Tag / Serial Number..." oninput="renderAssetTable()" />
+          <select id="arCategory" onchange="renderAssetTable()"><option value="">ทุกหมวดหมู่</option></select>
+          <select id="arType" onchange="renderAssetTable()"><option value="">ทุกประเภท</option></select>
+          <select id="arClass" onchange="renderAssetTable()">
+            <option value="">ทุก Flag</option>
+            <option value="INTERNAL">ทรัพย์สินภายใน</option>
+            <option value="LOANABLE">ให้ยืมได้</option>
+            <option value="SELLABLE">ให้ขายได้</option>
+          </select>
+          <select id="arStatus" onchange="renderAssetTable()">
+            <option value="">ทุกสถานะ</option>
+            <option value="IN_STOCK">พร้อมใช้งาน</option>
+            <option value="BORROWED">เบิกแล้ว/ใช้งานอยู่</option>
+            <option value="SOLD">ขายแล้ว</option>
+            <option value="REPAIR">รอซ่อม</option>
+            <option value="OUT_FOR_REPAIR">กำลังซ่อม (ส่งออกแล้ว)</option>
+            <option value="PENDING_WRITEOFF">รอ Write-off</option>
+            <option value="WRITTEN_OFF">ตัดจำหน่ายแล้ว</option>
+          </select>
+          <span id="arCount" style="color:#64748b;font-size:12.5px;margin-left:auto;"></span>
+        </div>
+
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="dt">
+            <thead>
+              <tr>
+                <th>Asset Tag</th><th>ประเภท</th><th>Serial Number</th><th>Flag</th><th>สถานะ</th>
+                <th>โครงการ/ลูกค้า</th><th>Location</th><th>Actual Location</th><th>Cost (บาท)</th>
+              </tr>
+            </thead>
+            <tbody id="arBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN: BORROW REQUEST (ขอเบิก) ============ -->
+      <section class="screen" id="screen-borrow-request">
+        <div class="page-head">
+          <div>
+            <h2>ขอเบิกอุปกรณ์</h2>
+            <p>Asset Holder ทุกคนใช้หน้านี้ได้เอง (self-service) · 💡 ในอนาคตหน้านี้จะเปิดจากหน้า "บันทึกอุปกรณ์โครงการ" ของ PMeX ได้โดยตรง พร้อมเติมข้อมูลโครงการให้อัตโนมัติ (ดูตัวอย่างคำขอที่มาจาก PMeX ด้านล่าง — ป้าย "จาก PMeX")</p>
+          </div>
+        </div>
+
+        <div class="pill-tabs">
+          <div class="pt active" data-tab="new" onclick="switchBorrowTab(this)">＋ สร้างคำขอใหม่</div>
+          <div class="pt" data-tab="pending" onclick="switchBorrowTab(this)">รายการคำขอที่ส่งแล้ว <span id="pendingCount"></span></div>
+        </div>
+
+        <!-- โหมด: สร้างคำขอใหม่ -->
+        <div id="borrowTabNew">
+          <div class="card">
+            <div class="form-row">
+              <label>วัตถุประสงค์ในการเบิก <span class="req">*</span></label>
+              <div class="radio-group">
+                <label class="radio-card sel" id="purposeCardLoan">
+                  <input type="radio" name="purpose" value="ยืม" checked onclick="onPurposeChange()" />
+                  <div><div class="t">ยืม / เช่าซื้อ</div><div class="d">เบิกให้โครงการ/ลูกค้า ต้องนำกลับเข้าคลังเมื่อครบสัญญา — ระบบจะเตือนก่อนถึงวันคืน</div></div>
+                </label>
+                <label class="radio-card" id="purposeCardSale">
+                  <input type="radio" name="purpose" value="ขายขาด" onclick="onPurposeChange()" />
+                  <div><div class="t">ขายขาด</div><div class="d">เบิกให้โครงการ/ลูกค้า ตัดออกจากสต๊อกถาวร ไม่ต้องนำกลับเข้าคลัง</div></div>
+                </label>
+                <label class="radio-card" id="purposeCardInternal">
+                  <input type="radio" name="purpose" value="ใช้งานภายใน" onclick="onPurposeChange()" />
+                  <div><div class="t">ใช้งานภายใน (Internal Use)</div><div class="d">เบิกทรัพย์สินภายใน Bedrock มาใช้เอง ไม่ผูกกับโครงการลูกค้า</div></div>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-row">
+                <label>วันที่ต้องการเริ่มใช้อุปกรณ์ <span class="req">*</span></label>
+                <input type="date" id="reqNeedDate" />
+                <span class="hint">คือวันที่ต้องการรับ/เริ่มใช้อุปกรณ์จริง — ส่วน "วันที่ขอเบิก" ระบบจะบันทึกอัตโนมัติจากวันที่กดส่งคำขอ ไม่ต้องกรอกเอง</span>
+              </div>
+              <div class="form-row" id="dueDateRow">
+                <label id="dueDateLabel">วันที่คาดว่าจะคืน <span class="req" id="dueDateReq">*</span></label>
+                <input type="date" id="reqDueDate" />
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-row">
+                <label>ชื่อ-สกุลผู้ขอเบิก</label>
+                <input type="text" id="reqName" value="ลัดดา คำมูล" readonly style="background:#f8fafc;" />
+              </div>
+              <div class="form-row">
+                <label>สังกัดทีม <span class="hint" style="display:inline">(auto-fill จาก profile)</span></label>
+                <input type="text" id="reqTeam" value="Project Delivery" readonly style="background:#f8fafc;" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label id="projectLabel">โครงการ / ลูกค้า <span class="req">*</span></label>
+              <input type="text" id="reqProject" placeholder="เช่น เทศบาลตำบลบางหญ้าแพรก — โครงการ Smart City" />
+            </div>
+
+            <div class="form-row">
+              <label>รายการอุปกรณ์ที่ต้องการเบิก <span class="req">*</span></label>
+              <div class="item-rows" id="itemRows">
+                <div class="item-row head"><div>ประเภทอุปกรณ์</div><div>จำนวน</div><div>หน่วย</div><div></div></div>
+              </div>
+              <div class="add-row-btn" onclick="addItemRow()">+ เพิ่มรายการอุปกรณ์</div>
+            </div>
+
+            <div class="form-row">
+              <label>หมายเหตุ</label>
+              <textarea id="reqNote" placeholder="ระบุรายละเอียดเพิ่มเติม (ถ้ามี)"></textarea>
+            </div>
+
+            <div style="display:flex;gap:10px;justify-content:flex-end;border-top:1px solid #e2e8f0;padding-top:16px;">
+              <button class="btn" onclick="resetBorrowForm()">ล้างฟอร์ม</button>
+              <button class="btn btn-primary" onclick="submitBorrowRequest()">ส่งคำขอเบิก</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- โหมด: รายการคำขอที่ส่งแล้ว -->
+        <div id="borrowTabPending" style="display:none;">
+          <div class="filters">
+            <input type="text" id="pendingSearch" placeholder="ค้นหา เลขคำขอ / ชื่อผู้ขอ / โครงการ-ลูกค้า / จังหวัด / รายการอุปกรณ์..." oninput="renderPendingRequests()" />
+            <select id="pendingPurposeFilter" onchange="renderPendingRequests()">
+              <option value="">ทุกวัตถุประสงค์</option>
+              <option value="ยืม">ยืม</option>
+              <option value="ขายขาด">ขายขาด</option>
+              <option value="ใช้งานภายใน">ใช้งานภายใน</option>
+            </select>
+            <select id="pendingStatusFilter" onchange="renderPendingRequests()">
+              <option value="">ทุกสถานะ</option>
+              <option value="รอจ่ายของ">รอจ่ายของ</option>
+              <option value="เบิกแล้ว">เบิกแล้ว</option>
+              <option value="หมดอายุ">หมดอายุ (ร่างทดแทน)</option>
+              <option value="ยกเลิกแล้ว">ยกเลิกแล้ว (ร่างทดแทน)</option>
+            </select>
+            <span id="pendingFilteredCount" style="color:#64748b;font-size:12.5px;margin-left:auto;"></span>
+          </div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="dt">
+              <thead>
+                <tr><th>เลขคำขอ</th><th>วัตถุประสงค์</th><th>ผู้ขอ</th><th>โครงการ/ลูกค้า</th><th>รายการ</th><th>ต้องการเริ่มใช้</th><th>กำหนดคืน</th><th>วันที่ขอเบิก</th><th>สถานะ</th><th>การรับของ</th><th>การคืน</th><th>ที่มา</th></tr>
+              </thead>
+              <tbody id="pendingBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN: RECEIVE (รับของเข้าคลัง) ============ -->
+      <section class="screen" id="screen-receive">
+        <div class="page-head">
+          <div>
+            <h2>รับของเข้าคลัง</h2>
+            <p>OPERATION บันทึกทรัพย์สินใหม่เข้าคลัง — รองรับทั้งกรอกทีละชิ้นและนำเข้าแบบชุด (Excel) · field อ้างอิงจากไฟล์ "Upload Printer" จริง</p>
+          </div>
+        </div>
+
+        <div class="pill-tabs">
+          <div class="pt active" data-tab="single" onclick="switchReceiveTab(this)">＋ รับทีละชิ้น</div>
+          <div class="pt" data-tab="bulk" onclick="switchReceiveTab(this)">📥 นำเข้าแบบชุด (Excel)</div>
+        </div>
+
+        <div id="receiveTabSingle">
+          <div class="card">
+            <div class="form-grid">
+              <div class="form-row">
+                <label>BEDROCK ID / Asset Tag <span class="req">*</span></label>
+                <input type="text" id="rcvTag" placeholder="เช่น BED125100099" />
+              </div>
+              <div class="form-row">
+                <label>ประเภทอุปกรณ์ <span class="req">*</span></label>
+                <select id="rcvType" onchange="onReceiveTypeChange()"></select>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-row" id="rcvSerialRow">
+                <label>Serial Number <span class="req">*</span></label>
+                <input type="text" id="rcvSerial" placeholder="Serial Number จริงของเครื่อง" />
+              </div>
+              <div class="form-row">
+                <label>Flag การใช้งาน (Classification) <span class="req">*</span></label>
+                <select id="rcvClass">
+                  <option value="LOANABLE">ให้ยืมได้</option>
+                  <option value="SELLABLE">ให้ขายได้</option>
+                  <option value="INTERNAL">ทรัพย์สินภายใน</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-row">
+                <label>ราคาสินทรัพย์ / ราคาทุน (บาท) <span class="req">*</span></label>
+                <input type="number" min="0" id="rcvCost" placeholder="0" />
+              </div>
+              <div class="form-row">
+                <label>Vendor</label>
+                <input type="text" id="rcvVendor" placeholder="ชื่อผู้ขาย/ตัวแทนจำหน่าย" />
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-row">
+                <label>PO no. อ้างอิง</label>
+                <input type="text" id="rcvPo" placeholder="เช่น PO-2026-0456" />
+              </div>
+              <div class="form-row">
+                <label>สถานที่เก็บอุปกรณ์ <span class="req">*</span></label>
+                <select id="rcvLocation"></select>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-row">
+                <label>วันเริ่มรับประกัน</label>
+                <input type="date" id="rcvWarrantyStart" />
+              </div>
+              <div class="form-row">
+                <label>วันสิ้นสุดรับประกัน</label>
+                <input type="date" id="rcvWarrantyEnd" />
+              </div>
+            </div>
+            <div class="form-row">
+              <label>รูปถ่ายอุปกรณ์ (Path เก็บไฟล์ใน Shared Folder)</label>
+              <input type="text" id="rcvPhotoPath" placeholder="เช่น \\\\bedrock-nas\\stock-photos\\BED125100099.jpg" />
+            </div>
+            <div class="form-row">
+              <label>ผู้รับผิดชอบรับเข้า</label>
+              <input type="text" id="rcvResponsible" readonly style="background:#f8fafc;" />
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;border-top:1px solid #e2e8f0;padding-top:16px;">
+              <button class="btn" onclick="resetReceiveForm()">ล้างฟอร์ม</button>
+              <button class="btn btn-primary" onclick="submitReceive()">บันทึกรับเข้าคลัง</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="receiveTabBulk" style="display:none;">
+          <div class="card">
+            <p style="color:#64748b;font-size:13px;margin-top:0;">รูปแบบไฟล์นำเข้าจะใช้ field set เดียวกับ <code>File ข้อมูล Anywhere.xlsx (sheet Upload Printer)</code> — เวอร์ชันจริงจะให้เลือกไฟล์ Excel แล้วขึ้น preview ก่อนยืนยัน ในหน้า mockup นี้จำลองพฤติกรรมด้วยปุ่มด้านล่าง</p>
+            <input type="file" disabled style="margin-bottom:14px;" />
+            <div><button class="btn btn-primary" onclick="demoBulkImport()">📥 จำลองนำเข้า 3 รายการตัวอย่าง</button></div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:0;overflow:hidden;margin-top:16px;">
+          <h3 style="margin:0;padding:14px 16px 0;font-size:14.5px;">รายการที่รับเข้าคลังล่าสุด</h3>
+          <table class="dt">
+            <thead><tr><th>Asset Tag</th><th>ประเภท</th><th>Serial</th><th>Flag</th><th>ราคาทุน</th><th>Vendor</th><th>PO</th><th>วันที่รับเข้า</th><th>ผู้บันทึก</th></tr></thead>
+            <tbody id="receiveLogBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN: DISPATCH (จ่ายอุปกรณ์) ============ -->
+      <section class="screen" id="screen-dispatch">
+        <div class="page-head">
+          <div>
+            <h2>จ่ายอุปกรณ์</h2>
+            <p>คิวคำขอเบิกที่รอจ่ายของ — OPERATION เลือก Serial Number จริงจากตารางที่มีข้อมูลประกอบ (เคยอยู่ไซต์นี้มาก่อน / ใกล้ไซต์นี้) ให้ตัดสินใจได้โดยไม่ต้องย้อนไปเปิดทะเบียนทรัพย์สินแยก · จ่ายของแล้วรอผู้รับยืนยันในระบบ ดูได้ที่แท็บ "รอยืนยันรับของ"</p>
+          </div>
+        </div>
+
+        <div class="pill-tabs">
+          <div class="pt active" data-tab="queue" onclick="switchDispatchTab(this)">คิวรอจ่ายของ</div>
+          <div class="pt" data-tab="receipt" onclick="switchDispatchTab(this)">รอยืนยันรับของ <span id="dispatchAwaitingCount"></span></div>
+        </div>
+
+        <div id="dispatchTabQueue">
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="dt">
+              <thead><tr><th>เลขคำขอ</th><th>วัตถุประสงค์</th><th>ผู้ขอ</th><th>โครงการ/แผนก</th><th>รายการ</th><th>กำหนดคืน</th><th></th></tr></thead>
+              <tbody id="dispatchQueueBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="dispatchTabReceipt" style="display:none;">
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="dt">
+              <thead><tr><th>เลขคำขอ</th><th>วัตถุประสงค์</th><th>ผู้ขอ</th><th>โครงการ/แผนก</th><th>รายการ</th><th>วันที่ขอเบิก</th><th></th></tr></thead>
+              <tbody id="dispatchReceiptBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN: RENEWAL (ต่ออายุการยืม) ============ -->
+      <section class="screen" id="screen-renewal">
+        <div class="page-head">
+          <div>
+            <h2>ต่ออายุการยืม</h2>
+            <p>สำหรับทรัพย์สินที่ "ยืม" อยู่และใกล้ครบกำหนด — การต่ออายุจะสร้างประวัติใหม่ (chain) ไม่กระทบสต๊อก</p>
+          </div>
+        </div>
+        <div class="filters">
+          <input type="text" id="renewalSearch" placeholder="ค้นหา Asset Tag / ประเภท / โครงการ..." oninput="renderRenewalQueue()" />
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="dt">
+            <thead><tr><th>Asset Tag</th><th>ประเภท</th><th>โครงการ/ลูกค้า</th><th>กำหนดคืนปัจจุบัน</th><th></th></tr></thead>
+            <tbody id="renewalQueueBody"></tbody>
+          </table>
+        </div>
+        <div class="card" style="margin-top:16px;">
+          <h3 style="margin-top:0;font-size:14.5px;">ประวัติการต่ออายุ</h3>
+          <table class="dt">
+            <thead><tr><th>เลขที่</th><th>Asset Tag</th><th>วันคืนเดิม</th><th>วันคืนใหม่</th><th>ผู้ขอ</th><th>วันที่ทำรายการ</th><th>หมายเหตุ</th></tr></thead>
+            <tbody id="renewalHistoryBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN: RETURN (รับคืนอุปกรณ์) ============ -->
+      <section class="screen" id="screen-return">
+        <div class="page-head">
+          <div>
+            <h2>รับคืนอุปกรณ์</h2>
+            <p>OPERATION บันทึกรับคืนจริง — เข้าสต๊อกเสมอ (+1) ยกเว้นแจ้งว่าอุปกรณ์เสียจะเข้าคิวรอซ่อมแทน · รองรับทั้งที่ผู้ขอเบิก "แจ้งคืน" มาก่อนผ่านระบบ และกรณีมีคนหิ้วของมาคืนเองแล้วค่อยมาเขียนใบคืนย้อนหลัง</p>
+          </div>
+        </div>
+
+        <div class="pill-tabs">
+          <div class="pt active" data-tab="requests" onclick="switchReturnTab(this)">คำขอแจ้งคืนจากผู้ขอเบิก <span id="selfReturnCount"></span></div>
+          <div class="pt" data-tab="walkin" onclick="switchReturnTab(this)">คืนของเอง (ของมาก่อนใบคืน)</div>
+        </div>
+
+        <div id="returnTabRequests">
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="dt">
+              <thead><tr><th>เลขที่</th><th>ผู้แจ้งคืน</th><th>โครงการ/แผนก</th><th>รายการ</th><th>วันที่แจ้ง</th><th></th></tr></thead>
+              <tbody id="selfReturnQueueBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="returnTabWalkin" style="display:none;">
+          <div class="filters">
+            <input type="text" id="returnSearch" placeholder="ค้นหา Asset Tag / Serial Number / ประเภท / โครงการ..." oninput="renderReturnQueue()" />
+          </div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="dt">
+              <thead><tr><th>Asset Tag</th><th>ประเภท</th><th>โครงการ/ลูกค้า</th><th>กำหนดคืน</th><th></th></tr></thead>
+              <tbody id="returnQueueBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px;">
+          <h3 style="margin-top:0;font-size:14.5px;">ประวัติรับคืนล่าสุด</h3>
+          <table class="dt">
+            <thead><tr><th>Asset Tag</th><th>ประเภท</th><th>เหตุผล</th><th>หมายเหตุ</th><th>ผู้บันทึก</th><th>วันที่</th></tr></thead>
+            <tbody id="returnLogBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN: REPAIR QUEUE (คิวพิจารณาซ่อม) ============ -->
+      <section class="screen" id="screen-repair">
+        <div class="page-head">
+          <div>
+            <h2>คิวพิจารณาซ่อม</h2>
+            <p>IT Support ตรวจอุปกรณ์ที่แจ้งเสีย แล้วตัดสินใจว่าซ่อมได้หรือไม่ — "ซ่อมได้" จะส่งไปแท็บ "กำลังซ่อม" ก่อน (ระบุ vendor/ค่าใช้จ่าย) แล้วค่อยยืนยัน "ซ่อมเสร็จ" อีกครั้งเมื่อได้เครื่องกลับมาจริง</p>
+          </div>
+        </div>
+
+        <div class="pill-tabs">
+          <div class="pt active" data-tab="pending" onclick="switchRepairTab(this)">รอพิจารณา</div>
+          <div class="pt" data-tab="out" onclick="switchRepairTab(this)">กำลังซ่อม <span id="outForRepairCount"></span></div>
+        </div>
+
+        <div id="repairTabPending">
+          <div class="filters">
+            <input type="text" id="repairSearch" placeholder="ค้นหา Asset Tag / ประเภท / Serial..." oninput="renderRepairQueue()" />
+          </div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="dt">
+              <thead><tr><th>Asset Tag</th><th>ประเภท</th><th>Serial</th><th>สถานที่ปัจจุบัน</th><th></th></tr></thead>
+              <tbody id="repairQueueBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="repairTabOut" style="display:none;">
+          <div class="filters">
+            <label><input type="checkbox" id="outForRepairOverdueOnly" onchange="renderOutForRepairQueue()" style="width:auto;margin-right:6px;" /> เฉพาะที่เกินกำหนด</label>
+          </div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="dt">
+              <thead><tr><th>Asset Tag</th><th>ประเภท</th><th>ส่งซ่อมที่</th><th>คาดว่าเสร็จ</th><th>ค่าใช้จ่ายประมาณ</th><th>ระยะเวลา</th><th></th></tr></thead>
+              <tbody id="outForRepairBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN: WRITE-OFF (คำขอ/อนุมัติ) ============ -->
+      <section class="screen" id="screen-writeoff">
+        <div class="page-head">
+          <div>
+            <h2>คำขอ/อนุมัติ Write-off</h2>
+            <p>รวมคำขอจากเคสซ่อมไม่ได้ / ผลตรวจนับประจำปี / แจ้งสูญหาย / อื่นๆ — อนุมัติแล้วตัดออกจากทะเบียนถาวร — สร้างคำขอเองเลือกทรัพย์สินด้วยตารางข้อมูลประกอบแบบเดียวกับหน้าจ่ายอุปกรณ์</p>
+          </div>
+          <button class="btn btn-primary" onclick="openNewWriteoffForm()">+ สร้างคำขอ Write-off ใหม่</button>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="dt">
+            <thead><tr><th>เลขที่</th><th>Asset Tag</th><th>ประเภท</th><th>เหตุผล</th><th>ผู้ขอ</th><th>วันที่ขอ</th><th>สถานะ</th><th></th></tr></thead>
+            <tbody id="writeoffBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN: ANNUAL CHECK (ตรวจนับประจำปี) ============ -->
+      <section class="screen" id="screen-annual-check">
+        <div class="page-head">
+          <div>
+            <h2>ตรวจนับประจำปี</h2>
+            <p>Export รายการให้ไปตรวจสภาพจริง แล้วบันทึกผลกลับ — ระบบสร้างคำขอ Write-off/ส่งซ่อมให้อัตโนมัติตามผลต่าง</p>
+          </div>
+          <button class="btn" onclick="exportAnnualCheckCsv()">⬇ Export รายการ (CSV)</button>
+        </div>
+
+        <div class="stat-grid" id="annualStatGrid"></div>
+
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="dt">
+            <thead><tr><th>Asset Tag</th><th>ประเภท</th><th>Location</th><th>Actual Location</th><th>สถานะในระบบ</th><th>ผลตรวจนับ</th><th>หมายเหตุ</th></tr></thead>
+            <tbody id="annualCheckBody"></tbody>
+          </table>
+        </div>
+        <div style="display:flex;justify-content:flex-end;padding-top:16px;">
+          <button class="btn btn-primary" onclick="saveAnnualCheck()">บันทึกผลตรวจนับ &amp; สร้างคำขอตามผลต่าง</button>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN: ITEM MASTER SETTINGS (ตั้งค่า Item Master) ============ -->
+      <section class="screen" id="screen-item-master">
+        <div class="page-head">
+          <div>
+            <h2>ตั้งค่า Item Master</h2>
+            <p>เพิ่ม/แก้ไขประเภทอุปกรณ์ กำหนด track Serial Number, อุปกรณ์แบบชุด (Kit), หมวดหมู่ (Category) และ scope การใช้งาน</p>
+          </div>
+          <button class="btn btn-primary" onclick="openItemMasterForm()">+ เพิ่มประเภทอุปกรณ์ใหม่</button>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;">
+          <div class="page-head" style="margin-bottom:12px;">
+            <div>
+              <h3 style="margin:0;">หมวดหมู่ (Category)</h3>
+              <p style="margin:2px 0 0;">จัดกลุ่มประเภทอุปกรณ์ให้ดูง่ายขึ้น เพิ่ม/แก้ไข/ลบได้ตามต้องการ</p>
+            </div>
+            <button class="btn" onclick="openCategoryForm()">+ เพิ่มหมวดหมู่</button>
+          </div>
+          <table class="dt">
+            <thead><tr><th>รหัส</th><th>ชื่อหมวดหมู่</th><th>จำนวนประเภทอุปกรณ์</th><th></th></tr></thead>
+            <tbody id="categoryBody"></tbody>
+          </table>
+        </div>
+
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="dt">
+            <thead><tr><th>รหัส</th><th>ชื่อประเภทอุปกรณ์</th><th>หมวดหมู่</th><th>Track S/N</th><th>แบบชุด (Kit)</th><th>Scope</th><th></th></tr></thead>
+            <tbody id="itemMasterBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ DRAWER: Asset Detail ============ -->
+<div class="overlay" id="assetDrawerOverlay" onclick="closeAssetDrawer(event)">
+  <div class="drawer" onclick="event.stopPropagation()">
+    <div class="drawer-head">
+      <h3>รายละเอียดทรัพย์สิน</h3>
+      <button class="drawer-close" onclick="closeAssetDrawer()">✕</button>
+    </div>
+    <div class="drawer-body" id="assetDrawerBody"></div>
+  </div>
+</div>
+
+<!-- ============ DRAWER: Generic action form (dispatch/renew/return/repair/write-off/item master) ============ -->
+<div class="overlay" id="actionDrawerOverlay" onclick="closeActionDrawer(event)">
+  <div class="drawer" onclick="event.stopPropagation()">
+    <div class="drawer-head">
+      <h3 id="actionDrawerTitle">การดำเนินการ</h3>
+      <button class="drawer-close" onclick="closeActionDrawer()">✕</button>
+    </div>
+    <div class="drawer-body" id="actionDrawerBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
